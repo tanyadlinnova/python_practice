@@ -1,8 +1,3 @@
-matrix = [
-    ['-', '-', '-']
-   ,['-', '-', '-']
-   ,['-', '-', '-']
-]
 def print_matrix(matrix_local):
     print("  0 1 2")
     i = 0
@@ -12,6 +7,7 @@ def print_matrix(matrix_local):
         for element in row:
             print(element, end = " ")
         print()
+    print()
 
 def check_win(matrix_local):
     is_win = False
@@ -38,19 +34,66 @@ def check_win(matrix_local):
 
     return is_win
 
+def check_dead_heat(matrix_local):
+    dead_heat = True
+    for row in matrix_local:
+        for element in row:
+            if element == "-":
+                dead_heat = False
+    if dead_heat:
+        print("Ничья")
+    return dead_heat
+
+
+matrix = [
+    ['-', '-', '-']
+   ,['-', '-', '-']
+   ,['-', '-', '-']
+]
+
 print_matrix(matrix)
 
 flag = "X"
+
 while 1:
     print(f"Ходит {flag}:")
     raw_input = input("Введите координаты: ")
-    coords = list(map(int, raw_input.split()))
+
+    correct = True
+    if raw_input == "":
+        correct = False
+    if not correct:
+        print("Вы ничего не ввели\n")
+        continue
+
+    split = raw_input.split()
+    if len(split) != 2:
+        print("Недопустимое количество координат\n")
+        continue
+
+
+    if not (split[0] in ["0", "1", "2"]):
+        correct = False
+    if not (split[1] in ["0", "1", "2"]):
+        correct = False
+    if not correct:
+        print("Недопустимые координаты\n")
+        continue
+
+    coords = list(map(int, split))
+
+    if matrix[coords[1]][coords[0]] != "-":
+        correct = False
+
+    if not correct:
+        print("Перезапись хода\n")
+        continue
 
     matrix[coords[1]][coords[0]] = flag
 
     print_matrix(matrix)
 
-    if check_win(matrix):
+    if check_win(matrix) or check_dead_heat(matrix):
         print("Game over")
         break
 
