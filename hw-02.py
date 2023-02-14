@@ -2,10 +2,10 @@ def print_matrix(matrix_local):
     print("  0 1 2")
     i = 0
     for row in matrix_local:
-        print(i,  end = " ")
+        print(i,  end=" ")
         i += 1
         for element in row:
-            print(element, end = " ")
+            print(element, end=" ")
         print()
     print()
 
