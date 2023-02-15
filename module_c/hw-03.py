@@ -15,22 +15,55 @@ def print_two_matrix(matrix_local_1, matrix_local_2):
 class Board:
     def __init__(self):
         self.matrix = [
-    ['-', '-', '-', '-', '-', '-']
-   ,['-', '-', '-', '-', '-', '-']
-   ,['-', '-', '-', '-', '-', '-']
-   ,['-', '-', '-', '-', '-', '-']
-   ,['-', '-', '-', '-', '-', '-']
-   ,['-', '-', '-', '-', '-', '-']]
+     ['~', '~', '~', '~', '~', '~']
+    ,['~', '~', '~', '~', '~', '~']
+    ,['~', '~', '~', '~', '~', '~']
+    ,['~', '~', '~', '~', '~', '~']
+    ,['~', '~', '~', '~', '~', '~']
+    ,['~', '~', '~', '~', '~', '~']]
         self.ships = []
 
     def add_ship(self, x, y, angle, type_of_ship):
         ship = Ship(x, y, angle, type_of_ship)
-        self.ships.append(ship)
 
+
+        intersection = False
+        #Ставим ли мы корабль в корректное место?
         for point in ship.points:
             x = point[0]
             y = point[1]
-            self.matrix[y][x] = "O"
+
+            if not (x >= 0 and x < 6 and y >= 0 and y < 6): #не выходим ли мы за границы поля?
+                intersection = True
+                break
+            if self.matrix[y][x] == "O" or self.matrix[y][x] == "-":
+                intersection = True
+                break
+
+        if not intersection:
+            self.ships.append(ship)
+            for point in ship.points:
+                x = point[0]
+                y = point[1]
+
+                self.matrix[y][x] = "O"
+
+            for shift_x in [-1, 0, 1]:
+                for shift_y in [-1, 0, 1]:
+                    for point in ship.points:
+                        x = point[0] + shift_x
+                        y = point[1] + shift_y
+
+                        if x >= 0 and x < 6 and y >= 0 and y < 6:
+                            if self.matrix[y][x] != "O":
+                                self.matrix[y][x] = "-"
+
+
+
+        return intersection
+
+
+
 
 
     def print_matrix(self):
@@ -70,10 +103,14 @@ for size_of_ship in list_of_ships_types:
     board_1.print_matrix()
     print(f"Куда ставить корабль {size_of_ship}-палубный? Три переменные, x, y и угол поворота(0 или 90)")
 
-    raw_input = input("Введите координаты: ")
-    split = raw_input.split()
-    x, y, angle = list(map(int, split))
 
-    board_1.add_ship(x, y, angle, size_of_ship)
+
+    while 1:
+        raw_input = input("Введите координаты: ")
+        split = raw_input.split()
+        x, y, angle = list(map(int, split))
+        error = board_1.add_ship(x - 1, y - 1, angle, size_of_ship)
+        if error == False:
+            break
 
 
